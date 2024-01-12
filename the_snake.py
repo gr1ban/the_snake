@@ -97,8 +97,7 @@ class Snake(GameObject):
         """Метод обработки движения змеи."""
         head_position = self.get_head_position()
         new_position = ()
-        hp0 = head_position[0]
-        hp1 = head_position[1]
+        hp0, hp1 = head_position
         gd = GRID_SIZE
         if self.direction == RIGHT:
             new_position = (hp0 + (RIGHT[0] * gd), hp1 + (RIGHT[1] * gd))
