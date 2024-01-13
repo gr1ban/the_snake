@@ -96,19 +96,7 @@ class Snake(GameObject):
     def move(self):
         """Метод обработки движения змеи."""
         head_position = self.get_head_position()
-        new_position = ()
-        hp0, hp1 = head_position
-        gd = GRID_SIZE
-        if self.direction == RIGHT:
-            new_position = (hp0 + (RIGHT[0] * gd), hp1 + (RIGHT[1] * gd))
-        elif self.direction == LEFT:
-            new_position = (hp0 + (LEFT[0] * gd), hp1 + (LEFT[1] * gd))
-        elif self.direction == UP:
-            new_position = (hp0 + (UP[0] * gd), hp1 + (UP[1] * gd))
-        elif self.direction == DOWN:
-            new_position = (hp0 + (DOWN[0] * gd), hp1 + (DOWN[1] * gd))
-        else:
-            new_position = (hp0 + gd, hp1)
+        new_position = self.drct()
 
         if new_position[0] > (SCREEN_WIDTH - 20):
             new_position = (0, head_position[1])
@@ -126,6 +114,23 @@ class Snake(GameObject):
             if len(self.positions) > self.length:
                 self.last = self.positions[-1]
                 self.positions.pop(-1)
+
+    def drct(self):
+        """Метод обработки направления движения змеи."""
+        head_position = self.get_head_position()
+        hp0, hp1 = head_position
+        gd = GRID_SIZE
+        if self.direction == RIGHT:
+            new_position = (hp0 + (RIGHT[0] * gd), hp1 + (RIGHT[1] * gd))
+        elif self.direction == LEFT:
+            new_position = (hp0 + (LEFT[0] * gd), hp1 + (LEFT[1] * gd))
+        elif self.direction == UP:
+            new_position = (hp0 + (UP[0] * gd), hp1 + (UP[1] * gd))
+        elif self.direction == DOWN:
+            new_position = (hp0 + (DOWN[0] * gd), hp1 + (DOWN[1] * gd))
+        else:
+            new_position = (hp0 + gd, hp1)
+        return new_position
 
     def draw(self, surface):
         """Метод отрисовки змеи."""
