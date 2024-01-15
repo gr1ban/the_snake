@@ -47,8 +47,17 @@ class GameObject:
         self.body_color = None
 
     def draw(self, surface):
-        """Метод отрисовки на экране."""
+        """Метод отрисовки объекта."""
         pass
+
+    def draw_rect(self, surface, position0, position1):
+        """Метод отрисовки ячейки на экране."""
+        rect = pygame.Rect(
+            (position0, position1),
+            (GRID_SIZE, GRID_SIZE)
+        )
+        pygame.draw.rect(surface, self.body_color, rect)
+        pygame.draw.rect(surface, (93, 216, 228), rect, 1)
 
 
 class Apple(GameObject):
@@ -60,12 +69,7 @@ class Apple(GameObject):
 
     def draw(self, surface):
         """Метод отрисовки на экране."""
-        rect = pygame.Rect(
-            (self.position[0], self.position[1]),
-            (GRID_SIZE, GRID_SIZE)
-        )
-        pygame.draw.rect(surface, self.body_color, rect)
-        pygame.draw.rect(surface, (93, 216, 228), rect, 1)
+        self.draw_rect(surface, self.position[0], self.position[1])
 
     def randomize_position(self):
         """Метод появления яблока."""
@@ -78,10 +82,9 @@ class Snake(GameObject):
 
     def __init__(self):
         """Конструктор дочернего класса змея."""
+        screen.fill(BOARD_BACKGROUND_COLOR)
         self.length = 1
-        self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-        self.positions = []
-        self.positions.append(self.position)
+        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
         self.direction = RIGHT
         self.next_direction = None
         self.body_color = (0, 255, 0)
@@ -96,7 +99,7 @@ class Snake(GameObject):
     def move(self):
         """Метод обработки движения змеи."""
         head_position = self.get_head_position()
-        new_position = self.drct()
+        new_position = self.change_direction()
 
         if new_position[0] > (SCREEN_WIDTH - 20):
             new_position = (0, head_position[1])
@@ -112,40 +115,33 @@ class Snake(GameObject):
         else:
             self.positions.insert(0, new_position)
             if len(self.positions) > self.length:
-                self.last = self.positions[-1]
-                self.positions.pop(-1)
+                self.last = self.positions.pop(-1)
 
-    def drct(self):
+    def change_direction(self):
         """Метод обработки направления движения змеи."""
         head_position = self.get_head_position()
-        hp0, hp1 = head_position
+        head_0, head_1 = head_position
         gd = GRID_SIZE
         if self.direction == RIGHT:
-            new_position = (hp0 + (RIGHT[0] * gd), hp1 + (RIGHT[1] * gd))
+            new_position = (head_0 + (RIGHT[0] * gd), head_1 + (RIGHT[1] * gd))
         elif self.direction == LEFT:
-            new_position = (hp0 + (LEFT[0] * gd), hp1 + (LEFT[1] * gd))
+            new_position = (head_0 + (LEFT[0] * gd), head_1 + (LEFT[1] * gd))
         elif self.direction == UP:
-            new_position = (hp0 + (UP[0] * gd), hp1 + (UP[1] * gd))
+            new_position = (head_0 + (UP[0] * gd), head_1 + (UP[1] * gd))
         elif self.direction == DOWN:
-            new_position = (hp0 + (DOWN[0] * gd), hp1 + (DOWN[1] * gd))
+            new_position = (head_0 + (DOWN[0] * gd), head_1 + (DOWN[1] * gd))
         else:
-            new_position = (hp0 + gd, hp1)
+            new_position = (head_0 + gd, head_1)
         return new_position
 
     def draw(self, surface):
         """Метод отрисовки змеи."""
         for position in self.positions[:-1]:
-            rect = (
-                pygame.Rect((position[0], position[1]), (GRID_SIZE, GRID_SIZE))
-            )
-            pygame.draw.rect(surface, self.body_color, rect)
-            pygame.draw.rect(surface, (93, 216, 228), rect, 1)
+            self.draw_rect(surface, position[0], position[1])
 
         # Отрисовка головы змейки
         head = self.positions[0]
-        head_rect = pygame.Rect((head[0], head[1]), (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(surface, self.body_color, head_rect)
-        pygame.draw.rect(surface, (93, 216, 228), head_rect, 1)
+        self.draw_rect(surface, head[0], head[1])
 
         # Затирание последнего сегмента
         if self.last:
@@ -160,14 +156,8 @@ class Snake(GameObject):
         return self.positions[0]
 
     def reset(self):
-        """Метод обнуление игры при столкновении."""
-        screen.fill(BOARD_BACKGROUND_COLOR)
-        self.length = 1
-        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
-        self.direction = RIGHT
-        self.next_direction = None
-        self.body_color = (0, 255, 0)
-        self.last = None
+        """Метод обнуления игры при столкновении."""
+        self.__init__()
 
 
 def main():
