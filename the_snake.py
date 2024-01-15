@@ -84,7 +84,9 @@ class Snake(GameObject):
         """Конструктор дочернего класса змея."""
         screen.fill(BOARD_BACKGROUND_COLOR)
         self.length = 1
-        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.positions = []
+        self.positions.append(self.position)
         self.direction = RIGHT
         self.next_direction = None
         self.body_color = (0, 255, 0)
