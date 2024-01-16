@@ -82,15 +82,7 @@ class Snake(GameObject):
 
     def __init__(self):
         """Конструктор дочернего класса змея."""
-        screen.fill(BOARD_BACKGROUND_COLOR)
-        self.length = 1
-        self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-        self.positions = []
-        self.positions.append(self.position)
-        self.direction = RIGHT
-        self.next_direction = None
-        self.body_color = (0, 255, 0)
-        self.last = None
+        self.reset()
 
     def update_direction(self):
         """Метод изменения движения при нажатии клавиатуры."""
@@ -117,7 +109,7 @@ class Snake(GameObject):
         else:
             self.positions.insert(0, new_position)
             if len(self.positions) > self.length:
-                self.last = self.positions.pop(-1)
+                self.last = self.positions.pop()
 
     def change_direction(self):
         """Метод обработки направления движения змеи."""
@@ -159,7 +151,15 @@ class Snake(GameObject):
 
     def reset(self):
         """Метод обнуления игры при столкновении."""
-        self.__init__()
+        screen.fill(BOARD_BACKGROUND_COLOR)
+        self.length = 1
+        self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.positions = []
+        self.positions.append(self.position)
+        self.direction = RIGHT
+        self.next_direction = None
+        self.body_color = (0, 255, 0)
+        self.last = None
 
 
 def main():
